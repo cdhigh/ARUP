@@ -21,34 +21,35 @@ For this reason, this tool is for programmers or python-amateurs only.
 
 # Python script
   ARUP execute a python function and use the result for renaming.
-  The signature of user function is `def rename(arg)`.
-    > argument: 'arg' is a dictionary that can access elements using attributes.
-    > return: This function will be called for each file to rename. return the desired new filename! return an empty string to skip renaming the file.    
+  The signature of user function is `def rename(arg)`.    
+    * argument: 'arg' is a dictionary that can access elements using attributes.
+    * return: This function will be called for each file to rename. return the desired new filename! return an empty string to skip renaming the file.    
+
   The dictionary `arg` has elements:
-  * totalNum: integer, total files number in list.
-  * index: integer, index of current file to rename, from 0.
-  * fileName: string, file name with extension.
-  * dirName: string, directory name of current file.
-  * fullPathName:  full filename, including path, file name with extension.
-  * tag(): function, *ONLY for music file*, you can execute `arg.tag()` to obtain tag object for current music archive.
-    the tag object has the following attrbutes:
-      * tag.album         # album as string
-      * tag.albumartist   # album artist as string
-      * tag.artist        # artist name as string
-      * tag.audio_offset  # number of bytes before audio data begins
-      * tag.bitrate       # bitrate in kBits/s
-      * tag.comment       # file comment as string
-      * tag.composer      # composer as string 
-      * tag.disc          # disc number
-      * tag.disc_total    # the total number of discs
-      * tag.duration      # duration of the song in seconds
-      * tag.filesize      # file size in bytes
-      * tag.genre         # genre as string
-      * tag.samplerate    # samples per second
-      * tag.title         # title of the song
-      * tag.track         # track number as string
-      * tag.track_total   # total number of tracks as string
-      * tag.year          # year or data as string
+  * **totalNum**: integer, total files number in list.
+  * **index**: integer, index of current file to rename, from 0.
+  * **fileName**: string, file name with extension.
+  * **dirName**: string, directory name of current file.
+  * **fullPathName**:  full filename, including path, file name with extension.
+  * **tag()**: function, **ONLY for music file**, you can execute `arg.tag()` to obtain tag object for current music archive.    
+    The tag object has the following attrbutes:
+      * tag.album         &emsp;# album as string
+      * tag.albumartist   &emsp;# album artist as string
+      * tag.artist        &emsp;# artist name as string
+      * tag.audio_offset  &emsp;# number of bytes before audio data begins
+      * tag.bitrate       &emsp;# bitrate in kBits/s
+      * tag.comment       &emsp;# file comment as string
+      * tag.composer      &emsp;# composer as string 
+      * tag.disc          &emsp;# disc number
+      * tag.disc_total    &emsp;# the total number of discs
+      * tag.duration      &emsp;# duration of the song in seconds
+      * tag.filesize      &emsp;# file size in bytes
+      * tag.genre         &emsp;# genre as string
+      * tag.samplerate    &emsp;# samples per second
+      * tag.title         &emsp;# title of the song
+      * tag.track         &emsp;# track number as string
+      * tag.track_total   &emsp;# total number of tracks as string
+      * tag.year          &emsp;# year or data as string
 
 # License
    ARUP is Licensed under the [AGPLv3](http://www.gnu.org/licenses/agpl-3.0.html) license.
