@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-"""实用工具：自动编译UI文件
-Author: suqiyuan <chsqyuan@gmail.com>
+"""Auto comiple ui files
+Author: Author: cdhigh <https://github.com/cdhigh>
 """
 import os,sys
 print('\n\t\tComiple ui files if nesssory!\n')
-uiDir = os.path.dirname(os.path.abspath(__file__))
+currDir = os.path.dirname(os.path.abspath(__file__))
+uiDir = currDir
 
 uis = []
 uisToCompiled = []

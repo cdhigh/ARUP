@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-"""将中文句子中汉字数字转阿拉伯数字
-Author: suqiyuan <chsqyuan@gmail.com>
-Initial release: 2016-05-13
+"""ARUP - Another bulk Rename Utility with embedded Python interpreter
+Chinese number convert to arab number (from internet)
+Author: cdhigh <https://github.com/cdhigh>
 """
-common_used_numerals_tmp = {'零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
+common_used_numerals = {'零': 0, '一': 1, '二': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
                             '十': 10, '百': 100, '千': 1000, '万': 10000, '亿': 100000000}
-common_used_numerals = {}
-for key in common_used_numerals_tmp:
-    common_used_numerals[key] = common_used_numerals_tmp[key]
- 
- 
+
 def chinese2digits(uchars_chinese):
     total = 0
     r = 1  # 表示单位：个十百千...
@@ -31,24 +27,22 @@ def chinese2digits(uchars_chinese):
         else:
             total = total + r * val
     return total
- 
- 
-num_str_start_symbol = ['一', '二', '两', '三', '四', '五', '六', '七', '八', '九',
-                        '十']
+
+num_str_start_symbol = ['一', '二', '两', '三', '四', '五', '六', '七', '八', '九', '十']
 more_num_str_symbol = ['零', '一', '二', '两', '三', '四', '五', '六', '七', '八', '九', '十', '百', '千', '万', '亿']
- 
+
 def changeChineseNumToArab(oriStr):
-    lenStr = len(oriStr);
+    lenStr = len(oriStr)
     aProStr = ''
     if lenStr == 0:
-        return aProStr;
- 
-    hasNumStart = False;
+        return aProStr
+
+    hasNumStart = False
     numberStr = ''
     for idx in range(lenStr):
         if oriStr[idx] in num_str_start_symbol:
             if not hasNumStart:
-                hasNumStart = True;
+                hasNumStart = True
  
             numberStr += oriStr[idx]
         else:
@@ -59,18 +53,17 @@ def changeChineseNumToArab(oriStr):
                 else:
                     numResult = str(chinese2digits(numberStr))
                     numberStr = ''
-                    hasNumStart = False;
+                    hasNumStart = False
                     aProStr += numResult
- 
+
             aProStr += oriStr[idx]
-            pass
- 
+
     if len(numberStr) > 0:
         resultNum = chinese2digits(numberStr)
         aProStr += str(resultNum)
- 
+
     return aProStr
- 
+
 if __name__ == '__main__':
     testStr = ['两百三十二', '我有两百三十二块钱', '十二个套餐', '一亿零八万零三百二十三', '今天天气真不错',
            '百分之八十 discount rate很高了', '千万不要',

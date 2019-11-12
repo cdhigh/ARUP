@@ -5,9 +5,9 @@ Main dialog
 Author: cdhigh <https://github.com/cdhigh>
 """
 
-__Version__ = '0.1'
+__Version__ = '0.2'
 
-import os, sys, re, fnmatch, pickle, types, traceback, copy, datetime, hashlib, uuid, shutil, locale, zipfile
+import os, sys, builtins, re, fnmatch, pickle, types, traceback, copy, datetime, hashlib, uuid, shutil, locale, zipfile
 from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDialog, QFileDialog, QTreeWidgetItem, QMessageBox, QInputDialog, QMenu
@@ -20,10 +20,13 @@ from mylib.highlighter import PythonHighlighter, CODE_FONT_FAMILY, CODE_FONT_SIZ
 from mylib.treegriddelegate import TreeGridDelegate
 from mylib.xpinyin import Pinyin
 from mylib.tinytag import TinyTag
+    
+appDir = os.path.dirname(os.path.realpath(__file__))
+builtins.__dict__['appDir'] = appDir #for dbmodule
+
 from dbmodule import *
 import snippetsMgr
 
-appDir = os.path.dirname(os.path.abspath(__file__))
 pyQtPath = os.path.dirname(os.path.abspath(QtWidgets.__file__))
 QtWidgets.QApplication.addLibraryPath(os.path.join(pyQtPath, 'plugins'))
 try: QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
@@ -371,9 +374,9 @@ class MainDialog(QDialog, Ui_dlgMain):
                 self.highlightCodeLine(execInfo)
                 self.txtOutput.insertPlainText(execInfo + '\n')
                 dstName = None
-                
-            if dstName in ('', None):
-                dstName = srcName
+            
+            if dstName in ('', None, srcName):
+                dstName = ''
 
             item = QTreeWidgetItem([str(idx + 1), srcName, str(dstName)])
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsSelectable | Qt.ItemIsEditable)
@@ -430,7 +433,9 @@ class MainDialog(QDialog, Ui_dlgMain):
                 self.txtOutput.insertPlainText(execInfo + '\n')
                 continue
 
-            if dstName not in ('', None):
+            if dstName in ('', None, srcName):
+                item.setText(2, '')
+            else:
                 item.setText(2, str(dstName))
 
     #Move the selected rows up

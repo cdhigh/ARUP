@@ -8,7 +8,7 @@ import os, sys, datetime
 from mylib.peewee import *
 from mylib.commutils import str_to_int, str_to_float, local_time
 
-dbName = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/snippets.db')
+dbName = os.path.join(appDir, 'data/snippets.db')
 
 dbInstance = SqliteDatabase(dbName, check_same_thread=False)
 
