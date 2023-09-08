@@ -5,7 +5,7 @@ Main dialog
 Author: cdhigh <https://github.com/cdhigh>
 """
 
-__Version__ = '0.2'
+__Version__ = '0.3'
 
 import os, sys, builtins, re, fnmatch, pickle, types, traceback, copy, datetime, hashlib, uuid, shutil, locale, zipfile
 from functools import partial
@@ -39,6 +39,7 @@ app.lastWindowClosed.connect(app.quit)
 APP_DATA_DIR = os.path.join(appDir, 'data')
 LAST_RENAME_FILE = os.path.join(APP_DATA_DIR, 'last_rename.pkl')
 LAST_DIR_FILE = os.path.join(APP_DATA_DIR, 'last_directory.tmp')
+LAST_SNIPPET_FILE = os.path.join(APP_DATA_DIR, 'last_snippet.txt')
 
 #Main Dialog
 class MainDialog(QDialog, Ui_dlgMain):
@@ -53,6 +54,7 @@ class MainDialog(QDialog, Ui_dlgMain):
         self.allFileList = [] #All files in current directory (unfiltered, unsorted)
         self.pinyin = None #instance of xpinyin.Pinyin()
         self.recentSnippetsMenuInited = False
+        self.lastSnippet = ''
 
         self.initPreviewWidget()
         self.initComboBoxWidget()
@@ -62,6 +64,17 @@ class MainDialog(QDialog, Ui_dlgMain):
         
         self.connectSignals()
 
+    def closeEvent(self, event):
+        txt = self.txtCode.toPlainText()
+        if txt != self.lastSnippet: #save the last unsaved snippet
+            try:
+                with open(LAST_SNIPPET_FILE, 'w', encoding='utf-8') as f:
+                    f.write(txt)
+            except:
+                pass
+
+        event.accept() # let the window close
+        
     def connectSignals(self):
         self.txtDirectory.returnPressed.connect(self.txtDirectory_returnPressed)
         self.btnDirectory.pressed.connect(self.btnDirectory_pressed)
@@ -141,14 +154,26 @@ class MainDialog(QDialog, Ui_dlgMain):
                 self.txtDirectory.setText(lastDir)
                 self.txtDirectory_returnPressed(isInInitial=True)
 
+        if os.path.exists(LAST_SNIPPET_FILE): #The last unsaved snippet
+            try:
+                with open(LAST_SNIPPET_FILE, 'r', encoding='utf-8') as f:
+                    self.lastSnippet = f.read()
+            except:
+                pass
+
     def createMenu(self):
         self.mnuSnippets = QMenu(self)
         
         self.actAddSnippet = self.mnuSnippets.addAction('Add current snippet to library')
         self.actAddSnippet.triggered.connect(self.actAddSnippet_triggered)
-        self.mnuRecentSnippets = self.mnuSnippets.addMenu('Recent snippets')
+        self.mnuRecentSnippets = self.mnuSnippets.addMenu('Snippets')
         self.actSnippetsMgr = self.mnuSnippets.addAction('Snippets manager')
         self.actSnippetsMgr.triggered.connect(self.actSnippetsMgr_triggered)
+        self.mnuSnippets.addSeparator()
+        self.actLastSnippet = self.mnuSnippets.addAction('Last snippet')
+        self.actLastSnippet.triggered.connect(self.actLastSnippet_triggered)
+        if not self.lastSnippet:
+            self.actLastSnippet.setEnabled(False)
 
     #Override this function of the parent class, intercepting shortcut events
     def keyPressEvent(self, event):
@@ -635,6 +660,19 @@ class MainDialog(QDialog, Ui_dlgMain):
         dlg.sigUseCodeSnippet.connect(self.useCodeSnippet)
         dlg.exec_()
         self.initRecentSnippetsMenu()
+
+    #The last unsaved snippet
+    def actLastSnippet_triggered(self):
+        txt = ''
+        if os.path.exists(LAST_SNIPPET_FILE):
+            try:
+                with open(LAST_SNIPPET_FILE, 'r', encoding='utf-8') as f:
+                    txt = f.read()
+            except:
+                pass
+
+        if txt and (txt != self.txtCode.toPlainText()):
+            self.txtCode.setPlainText(txt)
 
     #signal received from snippet manager
     def useCodeSnippet(self, codeText):
